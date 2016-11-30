@@ -16,6 +16,8 @@
 
         'ntp_conf': '/etc/ntp.conf',
         'ntpd_conf': '/etc/ntpd.conf',
+
+        'ntp_conf_src': 'salt://ntp/files/debian8/ntp.conf.jinja'
     },
     'RedHat': {
         'client': 'ntp',
@@ -25,6 +27,8 @@
 
         'ntp_conf': '/etc/ntp.conf',
         'ntpd_conf': '/etc/ntpd.conf',
+
+        'ntp_conf_src': 'salt://ntp/files/centos7/ntp.conf.jinja'
     },
     'Suse': {
         'client': 'ntp',
