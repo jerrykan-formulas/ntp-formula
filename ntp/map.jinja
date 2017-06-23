@@ -1,3 +1,14 @@
+{%- set distro_release = salt['grains.get']('osmajorrelease') -%}
+{%- set release_dir = {
+    'Debian': {
+        '8': 'debian8',
+        '9': 'debian9',
+    }.get(distro_release, 'debian9'),
+    'RedHat': {
+        '7': 'centos7',
+    }.get(distro_release, 'centos7'),
+}.get(salt['grains.get']('os_family')) -%}
+
 {% set map = {
     'Arch': {
         'client': 'ntp',
@@ -17,7 +28,7 @@
         'ntp_conf': '/etc/ntp.conf',
         'ntpd_conf': '/etc/ntpd.conf',
 
-        'ntp_conf_src': 'salt://ntp/files/debian8/ntp.conf.jinja'
+        'ntp_conf_src': 'salt://ntp/files/{}/ntp.conf.jinja'.format(release_dir),
     },
     'RedHat': {
         'client': 'ntp',
@@ -28,7 +39,7 @@
         'ntp_conf': '/etc/ntp.conf',
         'ntpd_conf': '/etc/ntpd.conf',
 
-        'ntp_conf_src': 'salt://ntp/files/centos7/ntp.conf.jinja'
+        'ntp_conf_src': 'salt://ntp/files/{}/ntp.conf.jinja'.format(release_dir),
     },
     'Suse': {
         'client': 'ntp',
