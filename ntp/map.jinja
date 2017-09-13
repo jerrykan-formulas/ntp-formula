@@ -1,3 +1,14 @@
+{%- set distro_release = salt['grains.get']('osmajorrelease') -%}
+{%- set release_dir = {
+    'Debian': {
+        '8': 'debian8',
+        '9': 'debian9',
+    }.get(distro_release, 'debian9'),
+    'RedHat': {
+        '7': 'centos7',
+    }.get(distro_release, 'centos7'),
+}.get(salt['grains.get']('os_family')) -%}
+
 {% set map = {
     'Arch': {
         'client': 'ntp',
@@ -16,6 +27,8 @@
 
         'ntp_conf': '/etc/ntp.conf',
         'ntpd_conf': '/etc/ntpd.conf',
+
+        'ntp_conf_src': 'salt://ntp/files/{}/ntp.conf.jinja'.format(release_dir),
     },
     'RedHat': {
         'client': 'ntp',
@@ -25,6 +38,8 @@
 
         'ntp_conf': '/etc/ntp.conf',
         'ntpd_conf': '/etc/ntpd.conf',
+
+        'ntp_conf_src': 'salt://ntp/files/{}/ntp.conf.jinja'.format(release_dir),
     },
     'Suse': {
         'client': 'ntp',
@@ -41,8 +56,4 @@
     },
 } %}
 
-{% if grains.get('saltversion', '').startswith('0.17') %}
 {% set ntp = salt['grains.filter_by'](map, merge=salt['pillar.get']('ntp:lookup')) %}
-{% else %}
-{% set ntp = map.get(grains.os_family) %}
-{% endif %}
