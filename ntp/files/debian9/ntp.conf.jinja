@@ -1,4 +1,5 @@
-{%- set servers = salt['pillar.get']('ntp:servers', [
+{%- set servers = salt['pillar.get']('ntp:servers', []) -%}
+{%- set pools = salt['pillar.get']('ntp:pools', [] if servers else [
     '0.debian.pool.ntp.org',
     '1.debian.pool.ntp.org',
     '2.debian.pool.ntp.org',
@@ -25,6 +26,9 @@ filegen clockstats file clockstats type day enable
 # pool.ntp.org maps to about 1000 low-stratum NTP servers.  Your server will
 # pick a different set every time it starts up.  Please consider joining the
 # pool: <http://www.pool.ntp.org/join.html>
+{%- for pool in pools %}
+pool {{ pool }} iburst
+{%- endfor %}
 {%- for server in servers %}
 server {{ server }} iburst
 {%- endfor %}
