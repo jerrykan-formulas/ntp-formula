@@ -1,4 +1,4 @@
-{%- set distro_release = salt['grains.get']('osmajorrelease') -%}
+{%- set distro_release = salt['grains.get']('osmajorrelease')|string -%}
 {%- set release_dir = {
     'Debian': {
         '8': 'debian8',
